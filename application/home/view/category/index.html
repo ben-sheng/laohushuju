@@ -1,0 +1,101 @@
+{extend name="default/base/eb_common"/}
+{block name="body"}
+          <section class="wrapper">
+          	<h3><i class="fa fa-angle-right"></i> 分类排行榜</h3>
+          	
+          	<div  class="row">
+          	<div class="col-lg-12">
+          		<form class="form-inline">
+					
+					<div style="padding:5px 0px;">
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="exampleInputEmail2">一级分类</label>
+					    <select name="cg1" id="cg1"   class="form-control"   onchange='javascript:ecsChange();'   style="width: 200px;">>
+					    	{foreach name="ecs['crawlcgs']" item="vo" key="k" }
+						  		<option  value ="{$k}"  {eq name="$formget.cg1"  value="$k"}selected = "selected"{/eq} >{$vo["name"]}</option>
+						  {/foreach}					  
+						</select>
+					  </div>
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="exampleInputEmail2">二级分类</label>
+					    <select name="cg2" id="cg2"   class="form-control"  style="width: 220px;">>
+					    	{foreach name="ecs['crawlcgs'][$formget.cg1]['items']" item="vo" key="k" }
+						  		<option  value ="{$k}"  {eq name="$formget.cg2"  value="$k"}selected = "selected"{/eq} >{$vo}</option>
+						  {/foreach}					  
+						</select>
+					  </div>
+					  <button type="submit" class="btn btn-primary" style="margin-left:20px;">搜&nbsp; &nbsp;索</button>	
+					  </div>
+					  								  				  
+				</form>
+				</div>
+          	</div>
+          	
+		  		<div class="row mt">
+			  		<div class="col-lg-12">
+                      <div class="content-panel">
+                      <h5><i class="fa fa-angle-right"></i> 总共找到{$total}个分类</h5>
+                          <section id="unseen">
+                            <table class="table table-bordered table-striped table-condensed">
+                              <thead>
+                              <tr>
+                                  <th style="text-align:center;">二级分类</th>
+                                  <th style="text-align:center;">一级分类</th>
+                                  <th style="text-align:center;"><a href="{$surl}sort=1" >总产品数量</a></th>
+                                  <th style="text-align:center;"><a href="{$surl}sort=2" >有出单产品数量</a></th>
+                                  <th style="text-align:center;"><a href="{$surl}sort=3" >品类动销率</a></th>
+                                  <th style="text-align:center;"><a href="{$surl}sort=4" >产品平均价格</a></th>
+                                  <th style="text-align:center;"><a href="{$surl}sort=5" >最近7天销售数量</a></th>
+                                  <th style="text-align:center;"><a href="{$surl}sort=6" >最近7天销售金额</a></th>
+                              		<th style="text-align:center;"><a href="{$surl}sort=7" >最近7天销量增长幅度</a></th>
+                                  <th style="text-align:center;">操作</th>
+                              </tr>                             
+                              </thead>
+                              <tbody>
+                              {volist name="list" id="listing" }
+                              <tr>
+                                  <td><div style="width:120px;"><a href="{:ebf_getUrlByContry('us',$listing['_source']['categoryurl'])}"  target="_blank">{$listing['_source']['categoryname']}</a></div></td>
+                                  <td><div style="width:60px;">{:ebf_getCategoryname($listing['_source']['pid'],$ecs["cgmaps"])}</div></td>
+                                  <td><div style="width:60px;">{$listing['_source']['listings']}</div></td>
+                                  <td><div style="width:60px;">{$listing['_source']['soldlistings']}</div></td>
+                                  <td><div style="width:40px;">{$listing['_source']['soldrate']}%</div></td>
+                                  <td><div style="width:80px;">{$listing['_source']['avgprice']}</div></td>
+                                  <td class="numeric">{$listing['_source']['soldnum7']}</td>
+                                  <td class="numeric">{$listing['_source']['revenue7']}</td>
+                                  <td><div style="width:80px;">{$listing['_source']['growthrate']}%</div></td>
+                                  <td>查看</td>
+                              </tr>
+                              {/volist}                              
+                              </tbody>
+                          </table>
+                          </section>
+                  </div><!-- /content-panel -->
+                  
+               </div><!-- /col-lg-4 -->			
+		  	</div><!-- /row -->
+		  	
+		  	<!-- 分页 -->
+			<div class="page">{$_page}</div>
+			<!-- /分页 -->
+{/block}
+ {block name="script"}	
+ <script>
+var catejson = '{:json_encode($ecs["crawlcgs"])}';
+var catdata  = JSON.parse(catejson);
+function ecsChange(){
+	var cg1 = $("#cg1").val();
+	var cg2 = catdata[cg1];	
+	if(!cg2) return;
+	var cg2items = cg2["items"];
+		
+    $("#cg2").empty();
+   	for(var code in cg2items){
+    	var name = cg2items[code];
+    	var option = $("<option>").val( code ).text( name );
+        $("#cg2").append(option);
+    }
+    $("#cg2").val("2" );
+}
+
+</script>
+{/block} 	

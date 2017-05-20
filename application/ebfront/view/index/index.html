@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+    <title>EB数据分析</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+    <!--external css-->
+    <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        
+    <!-- Custom styles for this template -->
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/style-responsive.css" rel="stylesheet">
+
+    <link href="/assets/css/table-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+  <section id="container" >
+      <!-- **********************************************************************************************************************************************************
+      TOP BAR CONTENT & NOTIFICATIONS
+      *********************************************************************************************************************************************************** -->
+      <!--header start-->
+      <header class="header black-bg" style="height:60px;background-color:	#0063d1">
+              <div class="sidebar-toggle-box">
+                  <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+              </div>
+            <!--logo start-->
+            <a href="/" class="logo"><b>EB数据分析</b></a>
+            <!--logo end-->
+            <div class="nav notify-row" id="top_menu">
+                
+            </div>
+            <div class="top-menu">
+            <!--
+            	<ul class="nav pull-right top-menu">
+                    <li><a class="logout" href="login.html">Logout</a></li>
+            	</ul>
+            	  -->
+            </div>
+        </header>
+      <!--header end-->
+      
+      <!-- **********************************************************************************************************************************************************
+      MAIN SIDEBAR MENU
+      *********************************************************************************************************************************************************** -->
+      <!--sidebar start-->
+      <aside>
+          <div id="sidebar"  class="nav-collapse ">
+              <!-- sidebar menu start-->
+              <ul class="sidebar-menu" id="nav-accordion">
+              
+
+              	  	
+                  <li class="sub-menu" style="margin-left:0px;margin-right:0px;">
+                      <a href="/">
+                          <i class="fa fa-th" style="font-size:20px;"></i>
+                          <span style="font-size:20px;">商品排行榜</span>
+                      </a>
+                  </li>       
+<!--                  <li class="sub-menu" style="margin-left:0px;margin-right:0px;">
+                      <a href="/">
+                          <i class="fa fa-th" style="font-size:20px;"></i>
+                          <span style="font-size:20px;">店铺排行榜</span>
+                      </a>
+                  </li>               
+ --> 
+              </ul>
+              <!-- sidebar menu end-->
+          </div>
+      </aside>
+      <!--sidebar end-->
+      
+      <!-- **********************************************************************************************************************************************************
+      MAIN CONTENT
+      *********************************************************************************************************************************************************** -->
+      <!--main content start-->
+      <section id="main-content">
+          <section class="wrapper">
+          	<h3><i class="fa fa-angle-right"></i> 商品排行榜</h3>
+          	
+          	<div  class="row">
+          	<div class="col-lg-12">
+          		<form class="form-inline">
+					
+					<div>
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="exampleInputEmail2">一级分类</label>
+					    <select name="cg1" id="cg1"  style="width: 150px;height:24px;"  onchange='javascript:ecsChange();'>
+					    	{foreach name="ecs['crawlcgs']" item="vo" key="k" }
+						  		<option  value ="{$k}"  {eq name="$formget.cg1"  value="$k"}selected = "selected"{/eq} >{$vo["name"]}</option>
+						  {/foreach}					  
+						</select>
+					  </div>
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="exampleInputEmail2">二级分类</label>
+					    <select name="cg2" id="cg2"  style="width: 150px;height:24px;">
+					    	{foreach name="ecs['crawlcgs'][$formget.cg1]['items']" item="vo" key="k" }
+						  		<option  value ="{$k}"  {eq name="$formget.cg2"  value="$k"}selected = "selected"{/eq} >{$vo}</option>
+						  {/foreach}					  
+						</select>
+					  </div>
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="exampleInputEmail2">商品价格</label>
+					    <input type="number" class="form-control"  name="minprice"  style="width: 70px;" value="{$formget.minprice|default=''}" >
+					    <input type="number" class="form-control"  name="maxprice"  style="width: 70px;" value="{$formget.maxprice|default=''}" >
+					  </div>
+				  </div>
+				  <div>
+				  <div class="form-group"style="margin-left:20px;">
+				    <label for="exampleInputName2">关键词</label>
+				    <input type="text" class="form-control"  name="keyword"  style="width: 400px;" value="{$formget.keyword|default=''}" >
+				  </div>
+				  <button type="submit" class="btn btn-primary" style="margin-left:20px;">搜&nbsp; &nbsp;索</button>
+				  </div>
+				</form>
+				</div>
+          	</div>
+          	
+		  		<div class="row mt">
+			  		<div class="col-lg-12">
+                      <div class="content-panel">
+                      <h5><i class="fa fa-angle-right"></i> 总共找到{$total}个商品</h5>
+                          <section id="unseen">
+                            <table class="table table-bordered table-striped table-condensed">
+                              <thead>
+                              <tr>
+                                  <th>图片</th>
+                                  <th>标题</th>
+                                  <th class="numeric"><a href="{$surl}sort=2" >售价</a></th>
+                                  <th>一级分类</th>
+                                  <th>二级分类</th>
+                                  <th>站点</th>
+                                  <th>物品所在地</th>
+                                  <th class="numeric"><a href="{$surl}sort=1" >总销量</a></th>
+                                  <th class="numeric"><a href="{$surl}sort=3" >总销售额</a></th>
+                                  <th><a href="{$surl}sort=4" >上架时间</a></th>
+                                  <th>店铺</th>
+                                  <th>备注</th>
+                                  <th>操作</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              {volist name="list" id="listing" }
+                              <tr>
+                                  <td><div style="width:120px;"><a href="{:ebf_getUrlByContry('us',$listing['_source']['lurl'])}"  target="_blank"><img src="{$listing['_source']['lthumb']}" style="max-width:120px;"></a></div></td>
+                                  <td><div style="width:150px;"><a href="{:ebf_getUrlByContry('us',$listing['_source']['lurl'])}"   target="_blank">{$listing['_source']['ltitle']}({$listing['_source']['lid']})</a></div></td>
+                                  <td class="numeric"><div style="width:80px;">{$listing['_source']['lcurrency']} {$listing['_source']['lprice']}</div></td>
+                                  <td>{:ebf_getCategoryname($listing['_source']['categorys'][0],$ecs["cgmaps"])}({$listing['_source']['categorys'][0]})</td>
+                                  <td>{:ebf_getCategoryname($listing['_source']['categorys'][1],$ecs["cgmaps"])}({$listing['_source']['categorys'][1]})</td>
+                                  <td>{$listing['_source']['country'][0]}/{$listing['_source']['country'][1]}</td>
+                                  <td>{$listing['_source']['location']}</td>
+                                  <td class="numeric">{$listing['_source']['soldnum']}</td>
+                                  <td class="numeric">{$listing['_source']['soldnum']}</td>
+                                  <td><div style="width:80px;">{:date("Y-m-d",$listing['_source']['generationtime'])}</div></td>
+                                  <td style="word-wrap:break-word;word-break:break-all;width:60px;"><a href="http://www.ebay.co.uk/sch/{$listing['_source']['seller']}/m.html"  target="_blank">{$listing['_source']['seller']}</a></td>
+                                  <td>无</td>
+                                  <td><a href="{:ebf_getUrlByContry('us',$listing['_source']['lurl'])}"  target="_blank">查看</a></td>
+                              </tr>
+                              {/volist}                              
+                              </tbody>
+                          </table>
+                          </section>
+                  </div><!-- /content-panel -->
+                  
+               </div><!-- /col-lg-4 -->			
+		  	</div><!-- /row -->
+		  	
+		  	<!-- 分页 -->
+			<div class="page">{$_page}</div>
+			<!-- /分页 -->
+
+		</section><! --/wrapper -->
+      </section><!-- /MAIN CONTENT -->
+
+      <!--main content end-->
+      <!--footer start-->
+      <footer class="site-footer">
+          <div class="text-center">
+              2017 - EBAY
+              <a href="#main-content" class="go-top">
+                  <i class="fa fa-angle-up"></i>
+              </a>
+          </div>
+      </footer>
+      <!--footer end-->
+  </section>
+
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="/assets/js/jquery.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script class="include" type="text/javascript" src="/assets/js/jquery.dcjqaccordion.2.7.js"></script>
+    <script src="/assets/js/jquery.scrollTo.min.js"></script>
+    <script src="/assets/js/jquery.nicescroll.js" type="text/javascript"></script>
+
+
+    <!--common script for all pages-->
+    <script src="/assets/js/common-scripts.js"></script>
+
+    <!--script for this page-->
+    
+
+  </body>
+</html>
+<script>
+var catejson = '{:json_encode($ecs["crawlcgs"])}';
+var catdata  = JSON.parse(catejson);
+function ecsChange(){
+	var cg1 = $("#cg1").val();
+	var cg2 = catdata[cg1];	
+	if(!cg2) return;
+	var cg2items = cg2["items"];
+		
+    $("#cg2").empty();
+   	for(var code in cg2items){
+    	var name = cg2items[code];
+    	var option = $("<option>").val( code ).text( name );
+        $("#cg2").append(option);
+    }
+    $("#cg2").val("2" );
+}
+
+</script>

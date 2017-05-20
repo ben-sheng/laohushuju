@@ -1,0 +1,212 @@
+{extend name="default/base/eb_common"/}
+{block name="body"}
+          <section class="wrapper">
+          	<h3><i class="fa fa-angle-right"></i> 商品排行榜</h3>
+          	
+          	<div  class="row">
+          	<div class="col-lg-12">
+          		<form class="form-inline">
+					
+					<div style="padding:5px 0px;">
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="contry">站点</label>
+					    <select name="country" id="country"  class="form-control" >
+					    		<option  value ="0"  {eq name="$formget.country"  value="0"}selected = "selected"{/eq} >全部</option>
+						  		<option  value ="us"  {eq name="$formget.country"  value="us"}selected = "selected"{/eq} >美国</option>
+						  		<option  value ="uk"  {eq name="$formget.country"  value="uk"}selected = "selected"{/eq} >英国</option>					  
+						</select>
+					  </div>
+
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="minweek">近7天销售件数</label>
+					    <input type="text" class="form-control"  name="minweek"  style="width: 90px;" value="{$formget.minweek|default=''}" >-
+					    <input type="text" class="form-control"  name="maxweek"  style="width: 90px;" value="{$formget.maxweek|default=''}" >
+					  </div>
+					  
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="minrevenue">近7天销售额</label>
+					    <input type="text" class="form-control"  name="minrevenue"  style="width: 90px;" value="{$formget.minrevenue|default=''}" >-
+					    <input type="text" class="form-control"  name="maxrevenue"  style="width: 90px;" value="{$formget.maxrevenue|default=''}" >
+					  </div>
+
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="minprice">商品价格</label>
+					    <input type="text" class="form-control"  name="minprice"   style="width: 90px;" value="{$formget.minprice|default=''}" >-
+					    <input type="text" class="form-control"  name="maxprice"  style="width: 90px;" value="{$formget.maxprice|default=''}" >
+					  </div>
+					  
+					  </div>
+					  
+					<div style="padding:5px 0px;">
+					<!-- 
+					<div class="form-group" style="margin-left:20px;">
+					    <label for="contry">海外仓</label>
+					    <select name="location"  id="location"  class="form-control" >
+					    		<option  value ="0"  {eq name="$formget.location"  value="0"}selected = "selected"{/eq} >全部</option>
+						  		<option  value ="United States"  {eq name="$formget.location"  value="United States"}selected = "selected"{/eq} >美国</option>
+						  		<option  value ="United Kingdom"  {eq name="$formget.location"  value="United Kingdom"}selected = "selected"{/eq} >英国</option>
+						  		<option  value ="China"  {eq name="$formget.location"  value="China"}selected = "selected"{/eq} >中国</option>						  
+						</select>
+					  </div>
+					   -->
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="exampleInputEmail2">一级分类</label>
+					    <select name="cg1" id="cg1"   class="form-control"   onchange='javascript:ecsChange();'   style="width: 200px;">>
+					    	{foreach name="ecs['crawlcgs']" item="vo" key="k" }
+						  		<option  value ="{$k}"  {eq name="$formget.cg1"  value="$k"}selected = "selected"{/eq} >{$vo["name"]}</option>
+						  {/foreach}					  
+						</select>
+					  </div>
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="exampleInputEmail2">二级分类</label>
+					    <select name="cg2" id="cg2"   class="form-control"  style="width: 220px;">>
+					    	{foreach name="ecs['crawlcgs'][$formget.cg1]['items']" item="vo" key="k" }
+						  		<option  value ="{$k}"  {eq name="$formget.cg2"  value="$k"}selected = "selected"{/eq} >{$vo}</option>
+						  {/foreach}					  
+						</select>
+					  </div>
+					  <!-- 
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="focus">关注</label>
+					    <select name="focus"  id="focus"  class="form-control" >
+					    		<option  value ="All"  {eq name="$formget.focus"  value="All"}selected = "selected"{/eq} >全部</option>
+						  		<option  value ="y"  {eq name="$formget.focus"  value="y"}selected = "selected"{/eq} >是</option>
+						  		<option  value ="n"  {eq name="$formget.foucs"  value="n"}selected = "selected"{/eq} >否</option>					  
+						</select>
+					  </div>
+					   -->
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="multiproperty">是否多属性</label>
+					    <select name="variations"  id="variations"  class="form-control" >
+					    		<option  value ="0"  {eq name="$formget.variations"  value="0"}selected = "selected"{/eq} >全部</option>
+						  		<option  value ="y"  {eq name="$formget.variations"  value="y"}selected = "selected"{/eq} >是</option>
+						  		<option  value ="n"  {eq name="$formget.variations"  value="n"}selected = "selected"{/eq} >否</option>					  
+						</select>
+					  </div>
+				  </div>
+				  
+				  <div style="padding:5px 0px;">
+				  <div class="form-group" style="margin-left:20px;">
+					    <label for="lid">商品ID</label>
+					    <input type="text" class="form-control"  name="lid"   style="width: 150px;" value="{$formget.lid|default=''}" >
+					  </div>
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="seller">卖家id</label>
+					    <input type="text" class="form-control"  name="seller"   style="width: 150px;" value="{$formget.seller|default=''}" >
+					  </div>
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="mingenerationtime">商品上架时间</label>
+					    <input type="date" class="form-control"  name="mingt"  value="{$formget.mingt}" >-
+					    <input type="date" class="form-control"  name="maxgt"  value="{$formget.maxgt}" >
+					  </div>
+				  			  
+				  </div>
+				  
+				  <div style="padding:5px 0px;">
+				  <div class="form-group"style="margin-left:20px;">
+				    <label for="exampleInputName2">关键词</label>
+				    <input type="text" class="form-control"  name="keyword"  style="width: 400px;" value="{$formget.keyword|default=''}" >
+				  </div>	
+				  	<button type="submit" class="btn btn-primary" style="margin-left:20px;">搜&nbsp; &nbsp;索</button>
+				  <a title="下载商品数据" id="download" type="button" class="btn btn-primary" style="margin-left:20px;" >下载当前选择商品</a>(下载当前查询条件前400条商品)
+				  </div>
+				</form>
+				</div>
+          	</div>
+          	
+		  		<div class="row mt">
+			  		<div class="col-lg-12">
+                      <div class="content-panel">
+                      <h5><i class="fa fa-angle-right"></i> 总共找到{$total}个商品(全部来源中国仓)</h5>
+                          <section id="unseen">
+                            <table class="table table-bordered table-striped table-condensed">
+                              <thead>
+                              <tr>
+                                  <th rowspan="2"  style="text-align:center;line-height:38px;">图片</th>
+                                  <th rowspan="2"  style="text-align:center;line-height:38px;">标题</th>
+                                  <th rowspan="2"  style="text-align:center;line-height:38px;"><a href="{$surl}sort=2" >售价</a></th>
+                                  <th rowspan="2"  style="text-align:center;line-height:38px;">一级分类</th>
+                                  <th rowspan="2"  style="text-align:center;line-height:38px;">二级分类</th>
+                                  <th rowspan="2"  style="text-align:center;line-height:38px;">站点</th>
+                                  <th rowspan="2"  style="text-align:center;line-height:38px;">物品所在地</th>
+                                  <th rowspan="2"  style="text-align:center;line-height:38px;"><a href="{$surl}sort=1" >总销量</a></th>
+                                  <th rowspan="2"  style="text-align:center;line-height:38px;"><a href="{$surl}sort=3" >总销售额</a></th>
+                                  <th colspan="3" style="text-align:center;">近7天</th>
+                                  <th rowspan="2"  style="text-align:center;line-height:38px;"><a href="{$surl}sort=4" >上架时间</a></th>
+                                  <th rowspan="2"  style="text-align:center;line-height:38px;">店铺</th>
+                                  <th rowspan="2"  style="text-align:center;line-height:38px;">备注</th>
+                                  <th rowspan="2"  style="text-align:center;line-height:38px;">操作</th>
+                              </tr>
+                              <tr>
+                              		<th style="text-align:center;"><a href="{$surl}sort=5" >商品销量</a></th>
+                              		<th style="text-align:center;"><a href="{$surl}sort=6" >销售金额</a></th>
+                              		<th style="text-align:center;"><a href="{$surl}sort=7" >销售增幅</a></th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              {volist name="list" id="listing" }
+                              <tr>
+                                  <td><div style="width:120px;"><a href="{:ebf_getUrlByContry('us',$listing['_source']['lurl'])}"  target="_blank"><img src="{$listing['_source']['mainimg']}" style="max-width:120px;"></a></div></td>
+                                  <td><div style="width:150px;"><a href="{:ebf_getUrlByContry('us',$listing['_source']['lurl'])}"   target="_blank">{$listing['_source']['ltitle']}({$listing['_source']['lid']})</a></div></td>
+                                  <td class="numeric"><div style="width:60px;">{$listing['_source']['lcurrency']} {$listing['_source']['lprice']}</div></td>
+                                  <td><div style="width:60px;">{:ebf_getCategoryname($listing['_source']['categorys'][0],$ecs["cgmaps"])}</div></td>
+                                  <td><div style="width:60px;">{:ebf_getCategoryname($listing['_source']['categorys'][1],$ecs["cgmaps"])}</div></td>
+                                  <td><div style="width:40px;">{:ebf_getCountry($listing['_source']['country'])}</div></td>
+                                  <td><div style="width:80px;">{$listing['_source']['location']}</div></td>
+                                  <td class="numeric">{$listing['_source']['soldnum']}</td>
+                                  <td class="numeric">{$listing['_source']['revenue']}</td>
+                                  <td class="numeric">{$listing['_source']['soldnum7']}</td>
+                                  <td class="numeric">{$listing['_source']['revenue7']}</td>
+                                  <td class="numeric">{$listing['_source']['growthrate7']|default="-"}%</td>
+                                  <td><div style="width:80px;" class="text-center">{:ebf_getDate($listing['_source']['generationtime'])}</div></td>
+                                  <td style="word-wrap:break-word;word-break:break-all;width:60px;"><a href="/home/seller/sellerlistings.html?seller={$listing['_source']['seller']}"  target="_blank">{$listing['_source']['seller']}</a></td>
+                                  <td>无</td>
+                                  <td><a href="{:ebf_getUrlByContry('us',$listing['_source']['lurl'])}"  target="_blank">查看</a></td>
+                              </tr>
+                              {/volist}                              
+                              </tbody>
+                          </table>
+                          </section>
+                  </div><!-- /content-panel -->
+                  
+               </div><!-- /col-lg-4 -->			
+		  	</div><!-- /row -->
+		  	
+		  	<!-- 分页 -->
+			<div class="page">{$_page}</div>
+			<!-- /分页 -->
+{/block}
+ {block name="script"}	
+ <script src="/assets/js/jquery.jdownload.js"></script>
+ <script>
+var catejson = '{:json_encode($ecs["crawlcgs"])}';
+var catdata  = JSON.parse(catejson);
+function ecsChange(){
+	var cg1 = $("#cg1").val();
+	var cg2 = catdata[cg1];	
+	if(!cg2) return;
+	var cg2items = cg2["items"];
+		
+    $("#cg2").empty();
+   	for(var code in cg2items){
+    	var name = cg2items[code];
+    	var option = $("<option>").val( code ).text( name );
+        $("#cg2").append(option);
+    }
+    $("#cg2").val("2" );
+}
+
+$(document).ready(function () {
+   $('#download').jDownload({
+       event: 'click',
+       dialogWidth: 500,
+       dialogHeight: 250,
+       formid:"sellerform",
+       dlurl:"/home/listing/makedl?",
+       filePath: "/jdownload/loader.gif"
+        
+   });
+});
+
+</script>
+{/block} 	

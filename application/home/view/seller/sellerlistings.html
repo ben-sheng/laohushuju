@@ -1,0 +1,127 @@
+{extend name="default/base/eb_common"/}
+{block name="body"}
+          <section class="wrapper">
+          	<h3><i class="fa fa-angle-right"></i> <a href="/home/seller/index/html">店铺排行榜</a> <i class="fa fa-angle-right"></i> {$sellerid}</h3>
+          	
+          	<div  class="row">
+          	<div class="col-lg-12">
+          		<form class="form-inline" id="sellerform">
+					<input type="hidden"  name="seller"  value="{$sellerid}" >
+					<div style="padding:5px 0px;">
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="contry">站点</label>
+					    <select name="country" id="country"  class="form-control" >
+					    		<option  value ="0"  {eq name="$formget.country"  value="0"}selected = "selected"{/eq} >全部</option>
+						  		<option  value ="us"  {eq name="$formget.country"  value="us"}selected = "selected"{/eq} >美国</option>
+						  		<option  value ="uk"  {eq name="$formget.country"  value="uk"}selected = "selected"{/eq} >英国</option>					  
+						</select>
+					  </div>
+					  
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="contry">海外仓</label>
+					    <select name="location"  id="location"  class="form-control" >
+					    		<option  value ="0"  {eq name="$formget.location"  value="0"}selected = "selected"{/eq} >全部</option>
+						  		<option  value ="United States"  {eq name="$formget.location"  value="United States"}selected = "selected"{/eq} >美国</option>
+						  		<option  value ="United Kingdom"  {eq name="$formget.location"  value="United Kingdom"}selected = "selected"{/eq} >英国</option>
+						  		<option  value ="China"  {eq name="$formget.location"  value="China"}selected = "selected"{/eq} >中国</option>						  
+						</select>
+					  </div>
+					  <!-- 
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="exampleInputEmail2">近7天销售件数</label>
+					    <input type="text" class="form-control"  name="minweek1"  style="width: 90px;" value="{$formget.minweek1|default=''}" >-
+					    <input type="text" class="form-control"  name="maxweek2"  style="width: 90px;" value="{$formget.minweek2|default=''}" >
+					  </div>
+					   -->
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="exampleInputEmail2">商品价格</label>
+					    <input type="text" class="form-control"  name="minprice"   style="width: 90px;" value="{$formget.minprice|default=''}" >-
+					    <input type="text" class="form-control"  name="maxprice"  style="width: 90px;" value="{$formget.maxprice|default=''}" >
+					  </div>
+					  <div class="form-group" style="margin-left:20px;">
+					    <label for="mingenerationtime">商品上架时间</label>
+					    <input type="date" class="form-control"  name="mingt"  value="{$formget.mingt}" >-
+					    <input type="date" class="form-control"  name="maxgt"  value="{$formget.maxgt}" >
+					  </div>
+					  </div>					  
+				  
+				  <div style="padding:5px 0px;">
+				  <button type="submit" class="btn btn-primary" style="margin-left:20px;">搜&nbsp; &nbsp;索</button>
+				  <a title="下载商品数据" id="download" type="button" class="btn btn-primary" style="margin-left:20px;" >下载店铺当前选择商品</a>(下载当前查询条件前400条商品)
+				  </div>
+				</form>
+				</div>
+          	</div>
+          	
+		  		<div class="row mt">
+			  		<div class="col-lg-12">
+                      <div class="content-panel">
+                      <h5><i class="fa fa-angle-right"></i> {$sellerid}店铺总共找到{$total}个商品</h5>
+                          <section id="unseen">
+                            <table class="table table-bordered table-striped table-condensed">
+                              <thead>
+                              <tr>
+                                  <th>图片</th>
+                                  <th>标题</th>
+                                  <th class="numeric"><a href="{$surl}sort=2" >售价</a></th>
+                                  <th>一级分类</th>
+                                  <th>二级分类</th>
+                                  <th>站点</th>
+                                  <th>物品所在地</th>
+                                  <th class="numeric"><a href="{$surl}sort=1" >总销量</a></th>
+                                  <th class="numeric"><a href="{$surl}sort=3" >总销售额</a></th>
+                                  <th><a href="{$surl}sort=4" >上架时间</a></th>
+                                  <th>备注</th>
+                                  <th>操作</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              {volist name="list" id="listing" }
+                              <tr>
+                                  <td><div style="width:120px;"><a href="{:ebf_getUrlByContry('us',$listing['_source']['lurl'])}"  target="_blank"><img src="{$listing['_source']['mainimg']}" style="max-width:120px;"></a></div></td>
+                                  <td><div style="width:150px;"><a href="{:ebf_getUrlByContry('us',$listing['_source']['lurl'])}"   target="_blank">{$listing['_source']['ltitle']}({$listing['_source']['lid']})</a></div></td>
+                                  <td class="numeric"><div style="width:60px;">{$listing['_source']['lcurrency']} {$listing['_source']['lprice']}</div></td>
+                                  <td><div style="width:60px;">{:ebf_getCategoryname($listing['_source']['categorys'][0],$ecs["cgmaps"])}</div></td>
+                                  <td><div style="width:60px;">{:ebf_getCategoryname($listing['_source']['categorys'][1],$ecs["cgmaps"])}</div></td>
+                                  <td><div style="width:40px;">{:ebf_getCountry($listing['_source']['country'])}</div></td>
+                                  <td><div style="width:80px;">{$listing['_source']['location']}</div></td>
+                                  <td class="numeric">{$listing['_source']['soldnum']}</td>
+                                  <td class="numeric">{$listing['_source']['revenue']}</td>
+                                  <td><div style="width:80px;">{:ebf_getDate($listing['_source']['generationtime'])}</div></td>
+                                  <td>无</td>
+                                  <td><a href="{:ebf_getUrlByContry('us',$listing['_source']['lurl'])}"  target="_blank">查看</a></td>
+                              </tr>
+                              {/volist}                              
+                              </tbody>
+                          </table>
+                          </section>
+                  </div><!-- /content-panel -->
+                  
+               </div><!-- /col-lg-4 -->			
+		  	</div><!-- /row -->
+		  	
+		  	<!-- 分页 -->
+			<div class="page">{$_page}</div>
+			<!-- /分页 -->
+{/block}
+ {block name="script"}	
+ <script src="/assets/js/jquery.jdownload.js"></script>
+ <script>
+function download2(){
+//	$("#sellerform").attr("action", "/home/seller/sellerlistingsdownload.html");
+}
+
+$(document).ready(function () {
+    $('#download').jDownload({
+        event: 'click',
+        dialogWidth: 500,
+        dialogHeight: 250,
+        formid:"sellerform",
+        dlurl:"/home/listing/makedl?",
+        filePath: "/jdownload/loader.gif"
+         
+    });
+});
+
+</script>
+{/block} 	
